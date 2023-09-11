@@ -1,0 +1,36 @@
+data = Import["C:\Users\Documents\data", "Table"]
+
+Needs["Splines`"]
+
+ResourceFunction["RadialDistributionFunctionList"]
+
+"extracting points from a table of data and plotting"
+xvals = data[[1, 2 ;; 11]]
+yvals = data[[1, 12 ;; 21]]
+plotpoints = Transpose@{xvals , yvals}
+ListPlot[plotpoints, PlotMarkers -> {Automatic, Medium}, 
+ AxesLabel -> {HoldForm[x], HoldForm[y]}]
+
+ 
+Mean[EuclideanDistance @@@ Subsets[plotpoints, {2}]] "average distance between points"
+Mean[EuclideanDistance[{0, 0}, #] & /@ plotpoints] "average distance between points and the origin"
+
+"Nearest Neighbour Graph, 2 ways"
+ NearestNeighborGraph[plotpoints, {All, 1}]
+ pairs = Transpose[{plotpoints,  Nearest[plotpoints3, plotpoints, 2][[All, 2]]}]; Graphics[{{PointSize[Large], Pink, 
+   Point[plotpoints3]}, {Line[pairs]}}, AspectRatio -> 1]
+
+"Radial Distribution Function"
+ListLinePlot[ResourceFunction["RadialDistributionFunctionList"][plotpoints, 10.],
+  AxesLabel -> {"Distance", "g(r)"}] 
+
+  "Making Splines of Nearest Neighbours"
+Graphics[{{Spline[{{-0.298464`, -1.80266`}, {-0.742344`, -0.735637`}, \
+{-1.80529`, -0.282091`}}, Cubic]}, {Red, PointSize[Medium], 
+   Point[plotpoints]}}, AspectRatio -> 1]
+
+"Voronoi Diagram"
+VoronoiMesh[plotpoints]
+
+"Voronoi Entropy, Fractions come from graph"
+Svor = -N[(6/10 Log[6/10]) + (3/10 Log[3/10]) + (1/10 Log[1/10])]
