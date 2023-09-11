@@ -1,0 +1,7 @@
+data = Import["C:\Users\Documents\data", "Table"]
+xvals = data[[1, 2 ;; 11]]
+yvals = data[[1, 12 ;; 21]]
+plotpoints = Transpose@{xvals , yvals}
+ListPlot[plotpoints, PlotMarkers -> {Automatic, Medium}, 
+ AxesLabel -> {HoldForm[x], HoldForm[y]}]
+ NearestNeighborGraph[plotpoints, {All, 1}]
